@@ -21,8 +21,10 @@ export default function Start() {
   const handleAddName = (name) => {
     if (activePlayer === "X") {
       setPlayerX(name);
+      handlePlayerClick("O")
     } else if (activePlayer === "O") {
       setPlayerO(name);
+      handlePlayerClick("X")
     }
     handleTogglePopup();
   };
