@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Xicon from "../icons/Xicon";
 import Oicon from "../icons/Oicon";
 import PoupupName from '../PoupupName/PoupupName';
 import "./start.css";
 
 export default function Start() {
+  const navigate = useNavigate();
   const [activePlayer, setActivePlayer] = useState("X");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [players, setPlayers] = useState([
@@ -32,6 +34,9 @@ export default function Start() {
     }
 
     handleTogglePopup();
+  };
+  const handleButtonClick = () => {
+    navigate("/board", { state: { players } });
   };
 
   return (
@@ -69,7 +74,7 @@ export default function Start() {
               </span>
             </button>
             {players.every(player => player.name !== "") && (
-              <button className="btn btn-blue">Start Game</button>
+              <button className="btn btn-blue" onClick={handleButtonClick}>Start Game</button>
             )}
           </div>
           {isPopupOpen && (
