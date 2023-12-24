@@ -7,8 +7,10 @@ import "./start.css";
 export default function Start() {
   const [activePlayer, setActivePlayer] = useState("X");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [PlayerX, setPlayerX] = useState("");
-  const [PlayerO, setPlayerO] = useState("");
+  const [players, setPlayers] = useState([
+    { symbol: "X", name: "" },
+    { symbol: "O", name: "" }
+  ]);
 
   const handlePlayerClick = (player) => {
     setActivePlayer(player);
@@ -19,13 +21,16 @@ export default function Start() {
   };
 
   const handleAddName = (name) => {
+    const updatedPlayers = players.map((player) =>
+      player.symbol === activePlayer ? { ...player, name } : player
+    );
+    
+    setPlayers(updatedPlayers);
+
     if (activePlayer === "X") {
-      setPlayerX(name);
-      handlePlayerClick("O")
-    } else if (activePlayer === "O") {
-      setPlayerO(name);
-      handlePlayerClick("X")
+      handlePlayerClick("O");
     }
+
     handleTogglePopup();
   };
 
@@ -63,7 +68,7 @@ export default function Start() {
                 {activePlayer}{" "}
               </span>
             </button>
-            {PlayerX !== "" && PlayerO !== "" && (
+            {players.every(player => player.name !== "") && (
               <button className="btn btn-blue">Start Game</button>
             )}
           </div>
