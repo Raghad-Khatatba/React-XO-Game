@@ -1,13 +1,37 @@
 import React, { useState } from "react";
 import Xicon from "../icons/Xicon";
 import Oicon from "../icons/Oicon";
+import PoupupName from '../PoupupName/PoupupName';
 import "./start.css";
 
 export default function Start() {
   const [activePlayer, setActivePlayer] = useState("X");
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [players, setPlayers] = useState([
+    { symbol: "X", name: "" },
+    { symbol: "O", name: "" }
+  ]);
 
   const handlePlayerClick = (player) => {
     setActivePlayer(player);
+  };
+
+  const handleTogglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+
+  const handleAddName = (name) => {
+    const updatedPlayers = players.map((player) =>
+      player.symbol === activePlayer ? { ...player, name } : player
+    );
+    
+    setPlayers(updatedPlayers);
+
+    if (activePlayer === "X") {
+      handlePlayerClick("O");
+    }
+
+    handleTogglePopup();
   };
 
   return (
@@ -37,14 +61,24 @@ export default function Start() {
             <p className="text-light text-normal">remember: x goes first</p>
           </div>
           <div className="start_btns">
-            <button className="btn btn-yellow">
+            <button className="btn btn-yellow" onClick={handleTogglePopup}>
               Enter the name for player
               <span style={{ margin: "0 5px", fontSize: "20px" }}>
                 {" "}
                 {activePlayer}{" "}
               </span>
             </button>
+            {players.every(player => player.name !== "") && (
+              <button className="btn btn-blue">Start Game</button>
+            )}
           </div>
+          {isPopupOpen && (
+            <PoupupName
+              togglePopup={handleTogglePopup}
+              activePlayer={activePlayer}
+              addName={handleAddName}
+            />
+          )}
         </div>
       </div>
     </div>
