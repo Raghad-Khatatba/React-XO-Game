@@ -2,7 +2,7 @@ import React from "react";
 import Xicon from "../icons/Xicon";
 import Oicon from "../icons/Oicon";
 import "./board.css";
-export default function BoardCard({ user, active, index , onClick  }) {
+export default function BoardCard({ user, active, onClick  }) {
   return (
     <div
       className={`card ${active && user === "X" && "shadow-blue"} ${
