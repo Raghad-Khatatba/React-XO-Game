@@ -11,20 +11,20 @@ const Board = () => {
   const navigate = useNavigate();
   const players = location.state?.players || [];
   const [squares, setSquares] = useState(new Array(9).fill(""));
-  const [isRestartPopupOpen, setIsRestartPopupOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [xnext, setXnext] = useState(true);
 
   const handleGoBack = () => {
     navigate(-1);
   };
-  const handleToggleRestartPopup = () => {
-    setIsRestartPopupOpen(!isRestartPopupOpen);
+  const handleTogglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
   };
-  const handleToggleRestartPopupCallback = useCallback(() => {
+  const handleToggleRestartPopup = () => {
     setSquares(new Array(9).fill(""));
-    setXnext(true)
-    handleToggleRestartPopup();
-  }, [handleToggleRestartPopup]);
+    setXnext(true);
+    handleTogglePopup();
+  };
 
   const handleSquareClick = (ix) => {
     const currentUser = xnext ? "X" : "O";
@@ -95,10 +95,10 @@ const Board = () => {
           </div>
         </div>
       </div>
-      {isRestartPopupOpen && (
+      {isPopupOpen && (
         <RestartPoupup
-          toggleRestartPopup={handleToggleRestartPopup}
-          onClick={handleToggleRestartPopupCallback}
+          togglePopup={handleTogglePopup}
+          onClick={handleToggleRestartPopup}
         />
       )}
     </div>
