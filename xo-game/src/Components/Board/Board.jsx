@@ -1,22 +1,38 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Xicon from "../icons/Xicon";
 import Oicon from "../icons/Oicon";
 import "./board.css";
 import BoardCard from "./BoardCard";
+import RestartPoupup from "../BoardPoupup/RestartPoupup";
 
 const Board = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const players = location.state?.players || [];
-  const squares = ["", "O", "X", "", "O", "X", "", "", ""];
+  const [squares, setSquares] = useState(new Array(9).fill(""));
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [xnext, setXnext] = useState(true);
 
   const handleGoBack = () => {
     navigate(-1);
   };
-  const handleReload = useCallback(() => {
-    window.location.reload();
-  }, []);
+  const handleTogglePopup = () => {
+    setIsPopupOpen(!isPopupOpen);
+  };
+  const handleToggleRestartPopup = () => {
+    setSquares(new Array(9).fill(""));
+    setXnext(true);
+    handleTogglePopup();
+  };
+
+  const handleSquareClick = (ix) => {
+    const currentUser = xnext ? "X" : "O";
+    let copySquares = [...squares];
+    copySquares[ix] = currentUser;
+    setSquares(copySquares);
+    setXnext(!xnext);
+  };
 
   return (
     <div className="parent" style={{ position: "relative" }}>
@@ -34,13 +50,20 @@ const Board = () => {
               <Oicon />
             </div>
             <div className="board__turn">
-              <Xicon color="light" size="sm" />
-              <span style={{ color: `#30c4be` }}>-{players[0].name}- </span>turn
+              {xnext ? (
+                <Xicon color="light" size="sm" />
+              ) : (
+                <Oicon color="light" size="sm" />
+              )}
+              <span style={{ color: `${xnext ? "#30c4be" : "#f2b238"}` }}>
+                -{xnext ? players[0].name : players[1].name}-{" "}
+              </span>
+              turn
             </div>
             <div>
               <button
                 className="btn btn-sm board__restart"
-                onClick={handleReload}
+                onClick={handleToggleRestartPopup}
               >
                 <svg
                   aria-hidden="true"
@@ -61,11 +84,23 @@ const Board = () => {
           </div>
           <div className="board__body">
             {squares.map((sq, ix) => (
-              <BoardCard key={ix} user={sq} index={ix} active={ix === 5} />
+              <BoardCard
+                key={ix}
+                user={sq}
+                index={ix}
+                active={ix === 5}
+                onClick={() => handleSquareClick(ix)}
+              />
             ))}
           </div>
         </div>
       </div>
+      {isPopupOpen && (
+        <RestartPoupup
+          togglePopup={handleTogglePopup}
+          onClick={handleToggleRestartPopup}
+        />
+      )}
     </div>
   );
 };
