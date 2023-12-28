@@ -1,29 +1,48 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Xicon from "../icons/Xicon";
 import Oicon from "../icons/Oicon";
 import "./board.css";
 import BoardCard from "./BoardCard";
+import { calcWinner } from "../../helpers/calcWinner";
 import RestartPoupup from "../BoardPoupup/RestartPoupup";
+import WinPoupup from "../BoardPoupup/WinPoupup";
 
 const Board = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const players = location.state?.players || [];
   const [squares, setSquares] = useState(new Array(9).fill(""));
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isRestartPopupOpen, setIsrestartPopupOpen] = useState(false);
+  const [isWinPopupOpen, setIsWinPopupOpen] = useState(false);
   const [xnext, setXnext] = useState(true);
+  const [winner, setWinner] = useState(null);
+  const [winnerLine, setWinnerLine] = useState(null);
+  const [winnerName, setWinnerName] = useState("");
+  const [PoupupMode, setPoupupMode] = useState("");
 
   const handleGoBack = () => {
     navigate(-1);
   };
-  const handleTogglePopup = () => {
-    setIsPopupOpen(!isPopupOpen);
-  };
   const handleToggleRestartPopup = () => {
+    setIsrestartPopupOpen(!isRestartPopupOpen);
+  };
+  const handleToggleWinPopup = () => {
+    setIsWinPopupOpen(!isWinPopupOpen);
+  };
+  const restartGame = () =>{
     setSquares(new Array(9).fill(""));
     setXnext(true);
-    handleTogglePopup();
+    setWinner(null)
+    setWinnerLine(null)
+  }
+  const handleRestarGame = () => {
+    restartGame();
+    if(isRestartPopupOpen){
+    handleToggleRestartPopup();
+    }else if(isWinPopupOpen){
+     handleToggleWinPopup();   
+    }
   };
 
   const handleSquareClick = (ix) => {
@@ -32,6 +51,28 @@ const Board = () => {
     copySquares[ix] = currentUser;
     setSquares(copySquares);
     setXnext(!xnext);
+    checkWinner(copySquares);  
+  };
+
+  const checkWinner = (ns) => {
+    const isWinner = calcWinner(ns);
+    const isTie = ns.every((square) => square !== "");
+    if (isWinner) {
+      setWinner(isWinner.winner);
+      if (isWinner.winner === "X") {
+        setWinnerName(players[0].name);
+      } else {
+        setWinnerName(players[1].name);
+      }
+      setWinnerLine(isWinner.line);
+      setPoupupMode("win");
+      handleToggleWinPopup();
+    }else if (isTie) {
+        setWinner("Tie");
+        setWinnerName("No one");
+        setPoupupMode("Tie");
+        handleToggleWinPopup();
+      }
   };
 
   return (
@@ -88,19 +129,27 @@ const Board = () => {
                 key={ix}
                 user={sq}
                 index={ix}
-                active={ix === 5}
+                active={winner && winnerLine && winnerLine.includes(ix)}
                 onClick={() => handleSquareClick(ix)}
               />
             ))}
           </div>
         </div>
       </div>
-      {isPopupOpen && (
+      {isRestartPopupOpen && (
         <RestartPoupup
-          togglePopup={handleTogglePopup}
-          onClick={handleToggleRestartPopup}
+        togglePopup={handleToggleRestartPopup}
+        onClick={handleRestarGame}
         />
       )}
+      {isWinPopupOpen && (
+        <WinPoupup
+        PoupupMode={PoupupMode}
+        winner={winner}
+        winnerName={winnerName}
+        onClick={handleRestarGame}
+        />
+      )}      
     </div>
   );
 };
