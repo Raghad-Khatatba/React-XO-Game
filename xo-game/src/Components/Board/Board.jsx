@@ -48,10 +48,12 @@ const Board = () => {
   const handleSquareClick = (ix) => {
     const currentUser = xnext ? "X" : "O";
     let copySquares = [...squares];
-    copySquares[ix] = currentUser;
-    setSquares(copySquares);
-    setXnext(!xnext);
-    checkWinner(copySquares);  
+    if (copySquares[ix]=== ''){
+      copySquares[ix] = currentUser;
+      setSquares(copySquares);
+      setXnext(!xnext);
+      checkWinner(copySquares);  
+      } 
   };
 
   const checkWinner = (ns) => {
