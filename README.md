@@ -1,4 +1,8 @@
 <h1>Tic Tac Toe (XO) Game</h1>
+ <img src="[https://github.com/Raghad-Khatatba/Training2/assets/92331567/ff02fc13-8136-4c89-aba0-03e8d5f944d5](https://github.com/Raghad-Khatatba/React-XO-Game/assets/92331567/e8e43430-edd8-4dd2-853e-7398311681cb)">
+ 
+ <img src="https://github.com/Raghad-Khatatba/React-XO-Game/assets/92331567/cf1ef2a6-83fd-43d2-ab41-e3cab52c2c6b">
+ <img src="[https://github.com/Raghad-Khatatba/Training2/assets/92331567/ff02fc13-8136-4c89-aba0-03e8d5f944d5](https://github.com/Raghad-Khatatba/React-XO-Game/assets/92331567/cc76d11b-fcc0-4fff-9783-3ced68ec5a63)">
  
 Project Description:
 The objective of this project is to create a simple Tic Tac Toe (XO) game using React.
